@@ -1,4 +1,4 @@
-
+//DVDのものまねをするプログラム
 class Ball
 {
   static final int R = 50;  
