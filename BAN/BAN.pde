@@ -12,6 +12,7 @@ void draw(){
   image(main, 0, 0);
   image(item, 900, 0);
   if(mousePressed){
+    //座標を取得する．クリックされると変数mouseX，mouseYが自動的に座標を取得する．
        System.out.println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
       if (mouseX >= 20 && mouseX <= 330){
         if(mouseY >= 320 && mouseY <= 540){ 
