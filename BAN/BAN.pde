@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 //追加でいじった
+=======
+
+//git-fetchtest
+>>>>>>> origin/master
 int stage;
 final int TITLE = 0;
 final int GAME = 1;
@@ -44,7 +49,7 @@ void title(){
     fill(255);
     textSize(24);
     textAlign(CENTER);
-    text("Ban-escape", width * 1, height * 1);
+    text("Ban-escape", width * 0.5, height * 0.3);
     text("Press any key to start", width * 0.5, height * 0.7);
     if (keyPressed) { // 何かのキーが押されていれば
       stage = GAME;   // ゲーム画面に遷移
