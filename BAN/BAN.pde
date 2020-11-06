@@ -8,10 +8,7 @@ void setup(){
   background(255);
 }
 
-<<<<<<< HEAD
-=======
-//また頑張ります
->>>>>>> 28113694aec369252cb9e9272130a2e4e9086920
+
 void draw(){
   if (stage == TITLE){
     title();
