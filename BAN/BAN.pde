@@ -1,4 +1,3 @@
-//git-fetchtest
 int stage;
 final int TITLE = 0;
 final int GAME = 1;
