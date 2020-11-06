@@ -13,7 +13,7 @@ void draw(){
     title();
     }
   else if (stage == GAME){
-    // PImage 型の変数 に画像データを読み込むあ
+    // PImage 型の変数 に画像データを読み込む
     PImage main = loadImage("main.jpg");
     PImage item = loadImage("item.png");
     // 画像を表示
