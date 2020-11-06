@@ -1,5 +1,3 @@
-//追加でいじった
->>>>>>> origin/master
 int stage;
 final int TITLE = 0;
 final int GAME = 1;
@@ -9,8 +7,8 @@ void setup(){
   size(1200, 600);
   background(255);
 }
-//test
 
+//また頑張ります
 void draw(){
   if (stage == TITLE){
     title();
