@@ -8,7 +8,7 @@ void setup(){
   background(255);
 }
 
-//また頑張ります
+//頑張りました
 void draw(){
   if (stage == TITLE){
     title();
