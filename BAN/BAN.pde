@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 //追加でいじった
-=======
-
-//git-fetchtest
 >>>>>>> origin/master
 int stage;
 final int TITLE = 0;
