@@ -32,10 +32,20 @@ void draw(){
             PImage chest_up = loadImage("chest_up.jpg");
             image(chest_up, 0, 0);
         }
-      }  
-     }
+      }else if (mouseX >= 750 && mouseX <= 900){
+        if (mouseY >=220 && mouseY <= 530){
+            PImage desk_up = loadImage("desk_up.jpg");
+            image(desk_up, 0, 0);
+        }
+      }else if(mouseX >= 345 && mouseX <= 440){
+        if(mouseY >= 200 && mouseY <=350){
+           PImage door_up = loadImage("door_up.jpg");
+           image(door_up, 0, 0);
+        }  
+      }
     }
- }
+  }  
+}
 
 void title(){
    background(0); 
