@@ -4,9 +4,12 @@ final int GAME = 1;
 final int ENDING = 2;
 int click_count = 0;
 int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
+//自分の見ている場所を表す配列です．
+//mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
 
 void setup(){
   scene = new int[5];
+  scene[0] = 1; //最初の視点をmainに．
   size(1200, 600);
   background(255);
   noLoop();
@@ -76,17 +79,17 @@ void title(){
     text("Press any key to start", width * 0.5, height * 0.7);
     if (keyPressed) { // 何かのキーが押されていれば
       stage = GAME;   // ゲーム画面に遷移
-      scene[0] = 1; //mainにいくのでmainを1に．
       redraw();
     }
 }
 void mousePressed() {
   click_count++;
-  System.out.println("クリックされた回数は"+click_count+"回です");
-  System.out.println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
+  println("クリックされた回数は"+click_count+"回です");
+  println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
   println(scene);
+  //mainにいないときには戻るボタン以外ではdraw()を回さないように場合分け．
   if (scene[0] != 1){//mainにいないときに
-    if(mouseX >=397 && mouseX <= 552){//戻るボタンが押されたら，main画像を表示する．．
+    if(mouseX >=397 && mouseX <= 552){//戻るボタンが押されたら，main画像を表示する．
       if(mouseY >= 493 && mouseY <= 531){
         return_main();
       }
@@ -96,11 +99,18 @@ void mousePressed() {
 }
 }
 
-void keyPressed(){
-    System.out.println("キー「"+key+"」が押されました.");
-    redraw();
+void keyPressed(){ 
+  println("キー「"+key+"」が押されました.");
+    /*
+    キー押すたびにdraw()を回してたらmain以外の視点の時にキーを押した時，
+    配列がめちゃくちゃになってしまうので
+    現状，title画面にいるときのみdraw()を回してmainの画像を表示するようにしています．
+    パスワード入力とかでキー入力を受け付けるならここ変更しましょう．．．
+    */
+  if (scene[0] == 1){
+  redraw();
+  }
 }
-
 void return_main(){
    scene[0] = 1; //mainに戻るのでmainを1に．
    scene[1] = 0; //bedを0に．
