@@ -1,3 +1,8 @@
+bedView bed;
+chestView chest;
+deskView desk;
+doorView door;
+
 int stage;
 final int TITLE = 0;
 final int GAME = 1;
@@ -8,66 +13,52 @@ int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
 //mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
 
 void setup(){
+  //それぞれのオブジェクトにクラスを割り当ててます
+  //引数は左から順に(xの始点,xの終点,yの始点,yの終点)になっています
+  bed = new bedView(20, 330, 220, 540);
+  chest = new chestView(610, 670, 210, 370);
+  desk = new deskView(750, 900, 220, 530);
+  door = new doorView(345, 440, 200, 350);
   scene = new int[5];
   scene[0] = 1; //最初の視点をmainに．
   size(1200, 600);
   background(255);
-  noLoop();
+  //noLoop();
 }
 
 void draw(){
-  if (stage == TITLE){
-    title();
-    }
+  if (stage == TITLE){ 
+    title(); 
+  }
   else if (stage == GAME){
+    noLoop();
     // PImage 型の変数 に画像データを読み込む
     PImage main = loadImage("main.jpg");
     PImage item = loadImage("item.png");
     // 画像を表示
     image(main, 0, 0);
     image(item, 900, 0);
-    if (mouseX >= 20 && mouseX <= 330){ 
-      if(mouseY >= 320 && mouseY <= 540){
-          //ベッド(左下)を拡大する
-          PImage bed_up = loadImage("bed_up.jpg");
-          image(bed_up, 0, 0);
-          PImage return_button = loadImage("return_Main.png");
-          image(return_button, 395, 490);
-          scene[0] = 0; //mainではないので0に変える．
-          scene[1] = 1; //bedを見るので1へ
-         }
-    }else if (mouseX >= 610 && mouseX <= 670){
-        if(mouseY >= 210 && mouseY <= 370){
-          //タンス(右上)を拡大する
-            PImage chest_up = loadImage("chest_up.jpg");
-            image(chest_up, 0, 0);
-            PImage return_button = loadImage("return_Main.png");
-            image(return_button, 395, 490);
-            scene[0] = 0; //mainではないので0に変える．
-            scene[2] = 1; //chestを見るので1へ
-        }
-      }else if (mouseX >= 750 && mouseX <= 900){
-        if (mouseY >=220 && mouseY <= 530){
-          //机(右下)を拡大する
-            PImage desk_up = loadImage("desk_up.jpg");
-            image(desk_up, 0, 0);
-            PImage return_button = loadImage("return_Main.png");
-            image(return_button, 395, 490);
-            scene[0] = 0; //mainではないので0に変える．
-            scene[3] = 1; //deskを見るので1へ
-        }
-      }else if(mouseX >= 345 && mouseX <= 440){
-        if(mouseY >= 200 && mouseY <=350){
-          //中央ドア(出口)ドア
-           PImage door_up = loadImage("door_up.jpg");
-           image(door_up, 0, 0);
-           PImage return_button = loadImage("return_Main.png");
-           image(return_button, 395, 490);
-           scene[0] = 0; //mainではないので0に変える．
-           scene[4] = 1; //doorを見るので1へ
-        }  
-      }
+    //ベッド処理
+    if(bed.check()){
+      bed.display();
+      bed.sceneChange();
     }
+    //タンス処理
+    else if(chest.check()){
+      chest.display();
+      chest.sceneChange();
+    }
+    //机処理
+    else if(desk.check()){
+      desk.display();
+      desk.sceneChange();
+    }
+    //ドア処理
+    else if(door.check()){
+      door.display();
+      door.sceneChange();
+    }
+  }
  }
 
 void title(){
@@ -119,4 +110,108 @@ void return_main(){
    scene[4] = 0; //doorを0に．
    println("mainに戻ります");
    redraw();
+}
+
+class bedView{
+  int firstX=0, endX=0, firstY=0, endY=0;
+  PImage return_button = loadImage("return_Main.png");
+  PImage bed = loadImage("bed_up.jpg");
+  bedView(int a, int b, int c, int d){
+    firstX = a;
+    endX = b;
+    firstY = c;
+    endY = d;
+  }
+  void display(){
+    image(bed, 0, 0);
+    image(return_button, 395, 490);
+  }
+  void sceneChange(){
+    scene[0] = 0;
+    scene[1] = 1;
+  }
+  boolean check(){
+    boolean result = false;
+    if (mouseX >= this.firstX && mouseX <= this.endX){
+      if(mouseY >= this.firstY && mouseY <= this.endY){
+        result = true;
+      }
+    }
+    return result;
+  }
+}
+
+class chestView{
+  int firstX=0, endX=0, firstY=0, endY=0;
+  PImage return_button = loadImage("return_Main.png");
+  PImage chest = loadImage("chest_up.jpg");
+  chestView(int a, int b, int c, int d){
+    firstX = a;
+    endX = b;
+    firstY = c;
+    endY = d;
+  }
+  void display(){
+    image(chest, 0, 0);
+    image(return_button, 395, 490);
+  }
+  void sceneChange(){
+    scene[0] = 0;
+    scene[2] = 1;
+  }
+  boolean check(){
+    boolean result = false;
+    if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
+    return result;
+  }
+}
+
+class deskView{
+  int firstX=0, endX=0, firstY=0, endY=0;
+  PImage return_button = loadImage("return_Main.png");
+  PImage desk = loadImage("desk_up.jpg");
+  deskView(int a, int b, int c, int d){
+    firstX = a;
+    endX = b;
+    firstY = c;
+    endY = d;
+  }
+  void display(){
+    image(desk, 0, 0);
+    image(return_button, 395, 490);
+  }
+  void sceneChange(){
+    scene[0] = 0;
+    scene[3] = 1;
+  }
+  boolean check(){
+    boolean result = false;
+    if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
+    return result;
+  }
+}
+
+class doorView{
+  int firstX=0, endX=0, firstY=0, endY=0;
+  PImage return_button = loadImage("return_Main.png");
+  PImage door = loadImage("door_up.jpg");
+  doorView(int a, int b, int c, int d){
+    firstX = a;
+    endX = b;
+    firstY = c;
+    endY = d;
+  }
+  void display(){
+    image(door, 0, 0);
+    image(return_button, 395, 490);
+  }
+  void sceneChange(){
+    scene[0] = 0;
+    scene[4] = 1;
+  }
+  boolean check(){
+    boolean result = false;
+    if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
+    return result;
+  }
 }
