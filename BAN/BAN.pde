@@ -2,6 +2,7 @@ bedView bed;
 chestView chest;
 deskView desk;
 doorView door;
+Inventory inventory;
 
 int stage;
 final int TITLE = 0;
@@ -19,6 +20,7 @@ void setup(){
   chest = new chestView(610, 670, 210, 370);
   desk = new deskView(750, 900, 220, 530);
   door = new doorView(345, 440, 200, 350);
+  inventory = new Inventory(960,0,width - 960,height);
   scene = new int[5];
   scene[0] = 1; //最初の視点をmainに．
   size(1200, 600);
@@ -34,10 +36,10 @@ void draw(){
     noLoop();
     // PImage 型の変数 に画像データを読み込む
     PImage main = loadImage("main.jpg");
-    PImage item = loadImage("item.png");
-    // 画像を表示
+    // 背景を表示
     image(main, 0, 0);
-    image(item, 900, 0);
+    //インベントリ表示
+    inventory.display();
     //ベッド処理
     if(bed.check()){
       bed.display();
@@ -87,7 +89,7 @@ void mousePressed() {
     }
   }else{
     redraw(); //main ==1 メインにいるときは他の場所に移動するためにdraw()を実行． 
-}
+  }
 }
 
 void keyPressed(){ 
@@ -214,4 +216,34 @@ class doorView{
     if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
     return result;
   }
+}
+
+class Inventory{      //インベントリ
+    int firstX=0, endX=0, firstY=0, endY=0;
+    Inventory(int a, int b, int c, int d){
+    firstX = a;
+    endX = b;
+    firstY = c;
+    endY = d;
+    }
+     void display(){      //アイテム欄表示
+      stroke(128);  
+      strokeWeight(4);
+      fill(0,0,0);
+      rect(960,0,width - 960,height);
+      strokeWeight(3);
+      rect(960,0,width - 960,height * 0.25);
+      rect(960,height * 0.25,width - 960,height * 0.25);
+      rect(960,height * 0.5,width - 960,height * 0.25);
+      rect(960,height * 0.75,width - 960,height * 0.25);
+     }
+     //アイテム表示メソッド:アイテム画像用意され次第取り掛かります
+     void Item1(){    
+     }
+     void Item2(){
+     }
+     void Item3(){
+     }
+     void Item4(){
+     }
 }
