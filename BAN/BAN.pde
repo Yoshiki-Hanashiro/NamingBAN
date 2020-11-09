@@ -4,6 +4,13 @@ deskView desk;
 doorView door;
 Inventory inventory;
 
+import javax.swing.*;
+import java.awt.*;
+
+JLayeredPane pane;
+JTextField field;
+JTextArea area;
+
 int stage;
 final int TITLE = 0;
 final int GAME = 1;
@@ -26,6 +33,8 @@ void setup(){
   size(1200, 600);
   background(255);
   //noLoop();
+  Canvas canvas = (Canvas) surface.getNative();
+  pane = (JLayeredPane) canvas.getParent().getParent();
 }
 
 void draw(){
@@ -40,10 +49,19 @@ void draw(){
     image(main, 0, 0);
     //インベントリ表示
     inventory.display();
+      // 1行のみのテキストボックスを作成
+  field = new JTextField();
+  field.setBounds(10, 10, 150, 30);
+  pane.add(field);
     //ベッド処理
     if(bed.check()){
       bed.display();
       bed.sceneChange();
+           pane.remove(field);
+            // 1行のみのテキストボックスを作成
+  field = new JTextField();
+  field.setBounds(310, 310, 150, 30);
+  pane.add(field);
     }
     //タンス処理
     else if(chest.check()){
