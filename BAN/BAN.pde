@@ -107,6 +107,7 @@ void keyPressed(){
   redraw();
   }
 }
+
 void return_main(){
    scene[0] = 1; //mainに戻るのでmainを1に．
    scene[1] = 0; //bedを0に．
@@ -116,6 +117,9 @@ void return_main(){
    println("mainに戻ります");
    redraw();
 }
+
+//class 画面遷移
+//class メインリターン
 
 class bedView{
   int firstX=0, endX=0, firstY=0, endY=0;
