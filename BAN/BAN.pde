@@ -2,13 +2,17 @@ bedView bed;
 chestView chest;
 deskView desk;
 doorView door;
+<<<<<<< HEAD
 Inventory inventory;
+=======
+>>>>>>> refs/remotes/origin/master
 
 int stage;
 final int TITLE = 0;
 final int GAME = 1;
 final int ENDING = 2;
 int click_count = 0;
+<<<<<<< HEAD
 int key_count = 0;
 int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
 //自分の見ている場所を表す配列です．
@@ -18,6 +22,11 @@ float gray = 255.0; //画像の暗さを保存しておく変数 0になると�
 
 //_________________________________________以下，mystery
 final String mystery5 = "escape";
+=======
+int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
+//自分の見ている場所を表す配列です．
+//mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
+>>>>>>> refs/remotes/origin/master
 
 void setup(){
   //それぞれのオブジェクトにクラスを割り当ててます
@@ -26,15 +35,22 @@ void setup(){
   chest = new chestView(610, 670, 210, 370);
   desk = new deskView(750, 900, 220, 530);
   door = new doorView(345, 440, 200, 350);
+<<<<<<< HEAD
   inventory = new Inventory(960,0,width - 960,height);
   scene = new int[5];
   keyData = new String();
+=======
+  scene = new int[5];
+>>>>>>> refs/remotes/origin/master
   scene[0] = 1; //最初の視点をmainに．
   size(1200, 600);
   background(255);
   //noLoop();
+<<<<<<< HEAD
   PFont font = createFont("Meiryo", 50); //日本語が表示されるように．
   textFont(font);
+=======
+>>>>>>> refs/remotes/origin/master
 }
 
 void draw(){
@@ -43,38 +59,52 @@ void draw(){
   }
   else if (stage == GAME){
     noLoop();
+<<<<<<< HEAD
     fill(0);
     rect(0,543,2000,100); 
     //0,543は左下テキスト描画ウィンドウの左上の座標です．
     //そこからx=2000ピクセル，y=100ピクセルの真っ黒な長方形を出力することでテキスト描画ウィンドウをリセットしています．
               
     if(scene[0] == 1){//mainにいるならば
+=======
+>>>>>>> refs/remotes/origin/master
     // PImage 型の変数 に画像データを読み込む
     PImage main = loadImage("main.jpg");
     // 背景を表示
     image(main, 0, 0);
+<<<<<<< HEAD
     //インベントリ表示
     inventory.display();
     
 
+=======
+    image(item, 900, 0);
+>>>>>>> refs/remotes/origin/master
     //ベッド処理
     if(bed.check()){
       bed.display();
       bed.sceneChange();
+<<<<<<< HEAD
 
       keyData ="";//今まで保存していた入力を初期化．
+=======
+>>>>>>> refs/remotes/origin/master
     }
     //タンス処理
     else if(chest.check()){
       chest.display();
       chest.sceneChange();
+<<<<<<< HEAD
 
       keyData ="";//今まで保存していたキー入力を初期化．
+=======
+>>>>>>> refs/remotes/origin/master
     }
     //机処理
     else if(desk.check()){
       desk.display();
       desk.sceneChange();
+<<<<<<< HEAD
 
       keyData ="";//今まで保存していたキー入力を初期化．
     }
@@ -121,10 +151,19 @@ void draw(){
   if(gray <= 0){
     ending(); 
   }
+=======
+    }
+    //ドア処理
+    else if(door.check()){
+      door.display();
+      door.sceneChange();
+    }
+>>>>>>> refs/remotes/origin/master
   }
  }
 
 void title(){
+<<<<<<< HEAD
   background(0); 
   fill(255);
   textSize(24);
@@ -151,6 +190,20 @@ void ending(){
 
 void mousePressed() {
   if(stage == GAME){
+=======
+   background(0); 
+    fill(255);
+    textSize(24);
+    textAlign(CENTER);
+    text("Ban-escape", width * 0.5, height * 0.3);
+    text("Press any key to start", width * 0.5, height * 0.7);
+    if (keyPressed) { // 何かのキーが押されていれば
+      stage = GAME;   // ゲーム画面に遷移
+      redraw();
+    }
+}
+void mousePressed() {
+>>>>>>> refs/remotes/origin/master
   click_count++;
   println("クリックされた回数は"+click_count+"回です");
   println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
@@ -162,6 +215,7 @@ void mousePressed() {
         return_main();
       }
     }
+<<<<<<< HEAD
     if (scene[4] == 1){//doorにいるとき
       if(mouseX >= 389 && mouseX <=531){
         if(mouseY >= 143 && mouseY <= 421){ //ドアの座標がクリックされたらdrawを回す
@@ -193,6 +247,25 @@ void keyPressed(){
 }
 
 
+=======
+  }else{
+    redraw(); //main ==1 メインにいるときは他の場所に移動するためにdraw()を実行． 
+}
+}
+
+void keyPressed(){ 
+  println("キー「"+key+"」が押されました.");
+    /*
+    キー押すたびにdraw()を回してたらmain以外の視点の時にキーを押した時，
+    配列がめちゃくちゃになってしまうので
+    現状，title画面にいるときのみdraw()を回してmainの画像を表示するようにしています．
+    パスワード入力とかでキー入力を受け付けるならここ変更しましょう．．．
+    */
+  if (scene[0] == 1){
+  redraw();
+  }
+}
+>>>>>>> refs/remotes/origin/master
 void return_main(){
    scene[0] = 1; //mainに戻るのでmainを1に．
    scene[1] = 0; //bedを0に．
@@ -203,7 +276,10 @@ void return_main(){
    redraw();
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/master
 class bedView{
   int firstX=0, endX=0, firstY=0, endY=0;
   PImage return_button = loadImage("return_Main.png");
@@ -231,6 +307,7 @@ class bedView{
     }
     return result;
   }
+<<<<<<< HEAD
 }
 
 class chestView{
@@ -288,19 +365,39 @@ class doorView{
   PImage return_button = loadImage("return_Main.png");
   PImage door = loadImage("door_up.jpg");
   doorView(int a, int b, int c, int d){
+=======
+}
+
+class chestView{
+  int firstX=0, endX=0, firstY=0, endY=0;
+  PImage return_button = loadImage("return_Main.png");
+  PImage chest = loadImage("chest_up.jpg");
+  chestView(int a, int b, int c, int d){
+>>>>>>> refs/remotes/origin/master
     firstX = a;
     endX = b;
     firstY = c;
     endY = d;
+<<<<<<< HEAD
 }
   void display(){
     image(door, 0, 0);
+=======
+  }
+  void display(){
+    image(chest, 0, 0);
+>>>>>>> refs/remotes/origin/master
     image(return_button, 395, 490);
   }
   void sceneChange(){
     scene[0] = 0;
+<<<<<<< HEAD
     scene[4] = 1;
 }
+=======
+    scene[2] = 1;
+  }
+>>>>>>> refs/remotes/origin/master
   boolean check(){
     boolean result = false;
     if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
@@ -308,14 +405,48 @@ class doorView{
   }
 }
 
+<<<<<<< HEAD
 
 class Inventory{      //インベントリ
     int firstX=0, endX=0, firstY=0, endY=0;
     Inventory(int a, int b, int c, int d){
+=======
+class deskView{
+  int firstX=0, endX=0, firstY=0, endY=0;
+  PImage return_button = loadImage("return_Main.png");
+  PImage desk = loadImage("desk_up.jpg");
+  deskView(int a, int b, int c, int d){
     firstX = a;
     endX = b;
     firstY = c;
     endY = d;
+  }
+  void display(){
+    image(desk, 0, 0);
+    image(return_button, 395, 490);
+  }
+  void sceneChange(){
+    scene[0] = 0;
+    scene[3] = 1;
+  }
+  boolean check(){
+    boolean result = false;
+    if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
+    return result;
+  }
+}
+
+class doorView{
+  int firstX=0, endX=0, firstY=0, endY=0;
+  PImage return_button = loadImage("return_Main.png");
+  PImage door = loadImage("door_up.jpg");
+  doorView(int a, int b, int c, int d){
+>>>>>>> refs/remotes/origin/master
+    firstX = a;
+    endX = b;
+    firstY = c;
+    endY = d;
+<<<<<<< HEAD
     }
      void display(){      //アイテム欄表示
       stroke(128);  
@@ -337,4 +468,20 @@ class Inventory{      //インベントリ
      }
      void Item4(){
      }
+=======
+  }
+  void display(){
+    image(door, 0, 0);
+    image(return_button, 395, 490);
+  }
+  void sceneChange(){
+    scene[0] = 0;
+    scene[4] = 1;
+  }
+  boolean check(){
+    boolean result = false;
+    if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
+    return result;
+  }
+>>>>>>> refs/remotes/origin/master
 }
