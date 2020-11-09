@@ -3,6 +3,14 @@ chestView chest;
 deskView desk;
 doorView door;
 Inventory inventory;
+textbox text_bed;
+
+import javax.swing.*;
+import java.awt.*;
+
+JLayeredPane pane;
+JTextField field;
+JTextArea area;
 
 int stage;
 final int TITLE = 0;
@@ -27,6 +35,8 @@ void setup(){
   desk = new deskView(750, 900, 220, 530);
   door = new doorView(345, 440, 200, 350);
   inventory = new Inventory(960,0,width - 960,height);
+  text_bed = new textbox(310, 310, 150, 30);
+  field = new JTextField();
   scene = new int[5];
   keyData = new String();
   scene[0] = 1; //最初の視点をmainに．
@@ -35,6 +45,8 @@ void setup(){
   //noLoop();
   PFont font = createFont("Meiryo", 50); //日本語が表示されるように．
   textFont(font);
+  Canvas canvas = (Canvas) surface.getNative();
+  pane = (JLayeredPane) canvas.getParent().getParent();
 }
 
 void draw(){
@@ -55,14 +67,12 @@ void draw(){
     image(main, 0, 0);
     //インベントリ表示
     inventory.display();
-    
-
     //ベッド処理
     if(bed.check()){
       bed.display();
       bed.sceneChange();
-
-      keyData ="";//今まで保存していた入力を初期化．
+      text_bed.add_box(310, 310, 150, 30);
+      keyData="";
     }
     //タンス処理
     else if(chest.check()){
@@ -199,6 +209,7 @@ void return_main(){
    scene[2] = 0; //chestを0に．
    scene[3] = 0; //deskを0に．
    scene[4] = 0; //doorを0に．
+   text_bed.remove_box();   //テキストbox
    println("mainに戻ります");
    redraw();
 }
@@ -310,10 +321,10 @@ class doorView{
 class Inventory{      //インベントリ
     int firstX=0, endX=0, firstY=0, endY=0;
     Inventory(int a, int b, int c, int d){
-    firstX = a;
-    endX = b;
-    firstY = c;
-    endY = d;
+      firstX = a;
+      endX = b;
+      firstY = c;
+      endY = d;
     }
      void display(){      //アイテム欄表示
       stroke(128);  
@@ -335,4 +346,22 @@ class Inventory{      //インベントリ
      }
      void Item4(){
      }
+}
+
+class textbox{    //textboxクラス
+  int firstX=0, endX=0, text_width=0, text_height=0;
+  textbox(int a, int b, int c, int d){
+  firstX = a;
+  endX = b;
+  text_width = c;
+  text_height = d;
+  }
+  void add_box(int x, int y, int box_width, int box_height){
+      field.setBounds(x,y,box_width,box_height);
+      pane.add(field);
+  }
+  void remove_box(){
+    println(field.getText());
+    pane.remove(field);
+  }
 }
