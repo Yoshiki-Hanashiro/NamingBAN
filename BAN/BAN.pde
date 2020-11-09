@@ -77,19 +77,21 @@ void title(){
     }
 }
 void mousePressed() {
-  click_count++;
-  println("クリックされた回数は"+click_count+"回です");
-  println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
-  println(scene);
-  //mainにいないときには戻るボタン以外ではdraw()を回さないように場合分け．
-  if (scene[0] != 1){//mainにいないときに
-    if(mouseX >=397 && mouseX <= 552){//戻るボタンが押されたら，main画像を表示する．
-      if(mouseY >= 493 && mouseY <= 531){
-        return_main();
+  if(stage == GAME){
+    click_count++;
+    println("クリックされた回数は"+click_count+"回です");
+    println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
+    println(scene);
+    //mainにいないときには戻るボタン以外ではdraw()を回さないように場合分け．
+    if (scene[0] != 1){//mainにいないときに
+      if(mouseX >=397 && mouseX <= 552){//戻るボタンが押されたら，main画像を表示する．
+        if(mouseY >= 493 && mouseY <= 531){
+          return_main();
+        }
       }
+    }else{
+      redraw(); //main ==1 メインにいるときは他の場所に移動するためにdraw()を実行． 
     }
-  }else{
-    redraw(); //main ==1 メインにいるときは他の場所に移動するためにdraw()を実行． 
   }
 }
 
