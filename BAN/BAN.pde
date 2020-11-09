@@ -13,6 +13,7 @@ int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
 //自分の見ている場所を表す配列です．
 //mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
 
+
 void setup(){
   //それぞれのオブジェクトにクラスを割り当ててます
   //引数は左から順に(xの始点,xの終点,yの始点,yの終点)になっています
