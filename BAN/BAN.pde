@@ -3,6 +3,17 @@ chestView chest;
 deskView desk;
 doorView door;
 Inventory inventory;
+textbox text_bed;
+textbox text_chest;
+textbox text_desk;
+textbox text_door;
+
+import javax.swing.*;
+import java.awt.*;
+
+JLayeredPane pane;
+JTextField field;
+JTextArea area;
 
 int stage;
 final int TITLE = 0;
@@ -10,13 +21,18 @@ final int GAME = 1;
 final int ENDING = 2;
 int click_count = 0;
 int key_count = 0;
-// ------int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
+int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
 //自分の見ている場所を表す配列です．
 //mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
 String keyData; //キー入力を保存する変数
+String strData; //テキストボックスに入力された文字を保存する変数．
 float gray = 255.0; //画像の暗さを保存しておく変数 0になると真っ暗になる．フェードアウトに使います
 
 //_________________________________________以下，mystery
+final String mystery1 = "1342";
+final String mystery2 = "1423";
+final String mystery3 = "cloud";
+final String mystery4 = ""; //入力は無し
 final String mystery5 = "escape";
 
 void setup(){
@@ -27,13 +43,21 @@ void setup(){
   desk = new deskView(750, 900, 220, 530);
   door = new doorView(345, 440, 200, 350);
   inventory = new Inventory(960,0,width - 960,height);
-  //-----scene = new int[5];
+  text_bed = new textbox(310, 310, 150, 30); //bed_upでtextboxを表示するため
+  text_chest = new textbox(310, 310, 150, 30); //chest_upでtextboxを表示するため
+  text_desk = new textbox(310, 310, 150, 30); //desk_upでtextboxを表示するため
+  text_door = new textbox(310, 310, 150, 30); //door_upでtextboxを表示するため
+  field = new JTextField();
+  scene = new int[5];
   keyData = new String();
-  //-----scene[0] = 1; //最初の視点をmainに．
+  scene[0] = 1; //最初の視点をmainに．
   size(1200, 600);
   background(255);
+  //noLoop();
   PFont font = createFont("Meiryo", 50); //日本語が表示されるように．
   textFont(font);
+  Canvas canvas = (Canvas) surface.getNative();
+  pane = (JLayeredPane) canvas.getParent().getParent();
 }
 
 void draw(){
@@ -43,9 +67,10 @@ void draw(){
   else if (stage == GAME){
     noLoop();
     fill(0);
-    rect(0,543,2000,100); 
+    stroke(0);  
+    rect(0,543,900,100); 
     //0,543は左下テキスト描画ウィンドウの左上の座標です．
-    //そこからx=2000ピクセル，y=100ピクセルの真っ黒な長方形を出力することでテキスト描画ウィンドウをリセットしています．
+    //そこからx=900ピクセル，y=100ピクセルの真っ黒な長方形を出力することでテキストを消します．
               
     if(scene[0] == 1){//mainにいるならば
     // PImage 型の変数 に画像データを読み込む
@@ -54,13 +79,12 @@ void draw(){
     image(main, 0, 0);
     //インベントリ表示
     inventory.display();
-
     //ベッド処理
     if(bed.check()){
       bed.display();
       bed.sceneChange();
 
-      keyData ="";//今まで保存していた入力を初期化．
+      keyData="";
     }
     //タンス処理
     else if(chest.check()){
@@ -83,44 +107,146 @@ void draw(){
 
       keyData ="";//今まで保存していたキー入力を初期化．
     }
+  }else if (scene[1] == 1){ //mainにいなくてベッドにいる時，
+    if( mouseX >= 363 && mouseX <= 727){ //ベッドをクリック
+      if(mouseY >= 211 && mouseY <= 422){
+        //画像を表示
 
-  }else if (scene[4] == 1){//doorにいるならば
-    if(mouseX >= 389 && mouseX <=531){
-      if(mouseY >= 143 && mouseY <= 421){ //ドアの座標]          
+        text_bed.remove_box();
+        println("ベッドをクリックしました");
         fill(255);
         textSize(20);
         textAlign(LEFT);
-        text("パスワードは何だろう・・？ (キーボードで入力，Enterで決定) →",10,580);
-        text(keyData,626,580); //key入力を表示
-        if(key == ENTER || key == RETURN){
-          println("入力されたパスワードは"+keyData);
-          keyData = trim(keyData); //文字列の先頭と末尾の空白文字を削除する
-          if(keyData.equals(mystery5)){
-            println("gameclear!");
-            fill(0);
-            rect(0,543,2000,100); 
-            stage = ENDING;   // エンディングへ
-            mouseX = 0;
-            mouseY = 0;
-            loop(); //ループを再開して自動的にエンディング画面へ
-          }else{
-            println("パスワードが違います");
-            keyData = "";
+        text("ん・・・？紙がある．どういう意味だろう・・・？",10,580);
+      }
+    }
+    if(mouseX >= 565 && mouseX <= 638){ //ゴミ箱をクリック
+      if(mouseY >= 446 && mouseY <= 536){
+        fill(255);
+        textSize(20);
+        textAlign(LEFT);
+        text("パスワードは何だろう・・？ (キーボードで入力，チェストをクリックで決定) →",10,580);
+        text_bed.add_box(750,555,150,30); //テキストボックスの表示
+        //text(keyData,626,580); //key入力を画面に表示
+        print(key);
+        strData = field.getText();
+        //key = UP; //直前のキーをENTERから何かに変えておく
+        println("入力されたパスワードは"+strData);
+        strData = trim(strData); //文字列の先頭と末尾の空白文字を削除する
+        if(strData.equals(mystery2)){
+          fill(0);
+          stroke(0);
+          rect(0,543,900,100); 
+        }else{
+          println("パスワードが違います");
+          keyData = "";
+          field.setText(""); //テキストボックスを初期化
           }
         }
       }
+    }else if (scene[2] == 1){//mainにいなくてchestにいるとき
+      if(mouseX >= 382 && mouseX <= 563){
+        if (mouseY >= 124 && mouseY <= 286){
+          println("チェストの鏡をクリックしました");
+          text_chest.remove_box();
+          fill(255);
+          textSize(20);
+          textAlign(LEFT);
+          text("鏡だ．いつも通りのクールビューティなマイフェイスが映っている．",10,580);
+        }
     }
-  }
- }else if (stage == ENDING){ 
+    if(mouseX >= 301 && mouseX <= 646){
+      if(mouseY >= 294 && mouseY <= 481){ //チェストの鏡以外の座標
+        fill(255);
+        textSize(20);
+        textAlign(LEFT);
+        text("パスワードは何だろう・・？ (キーボードで入力，チェストをクリックで決定) →",10,580);
+        text_chest.add_box(750,555,150,30); //テキストボックスの表示
+        //text(keyData,626,580); //key入力を画面に表示
+        print(key);
+        strData = field.getText();
+        //key = UP; //直前のキーをENTERから何かに変えておく
+        println("入力されたパスワードは"+strData);
+        strData = trim(strData); //文字列の先頭と末尾の空白文字を削除する
+        if(strData.equals(mystery2)){
+          fill(0);
+          stroke(0);
+          rect(0,543,900,100); 
+        }else{
+          println("パスワードが違います");
+          keyData = "";
+          field.setText(""); //テキストボックスを初期化
+          }
+       }
+     }
+    }else if (scene[3] == 1){ //deskにいるならば
+      if(mouseX >= 499 && mouseX <= 676){
+        if(mouseY >= 197 && mouseY <=472){
+          fill(255);
+          textSize(20);
+          textAlign(LEFT);
+          text("パスワードは何だろう・・？ (キーボードで入力，チェストをクリックで決定) →",10,580);
+          text_desk.add_box(750,555,150,30); //テキストボックスの表示
+          //text(keyData,626,580); //key入力を画面に表示
+          print(key);
+          strData = field.getText();
+          //key = UP; //直前のキーをENTERから何かに変えておく
+          println("入力されたパスワードは"+strData);
+          strData = trim(strData); //文字列の先頭と末尾の空白文字を削除する
+          if(strData.equals(mystery3)){
+            //正解
+            fill(0);
+            stroke(0);
+            rect(0,543,900,100); 
+          }else{
+            println("パスワードが違います");
+            keyData = "";
+            field.setText(""); //テキストボックスを初期化
+            }
+          }
+      }
+    }else if (scene[4] == 1){//doorにいるならば
+      if(mouseX >= 389 && mouseX <=531){
+        if(mouseY >= 143 && mouseY <= 421){ //ドアの座標
+          fill(255);
+          textSize(20);
+          textAlign(LEFT);
+          text("パスワードは何だろう・・？ (キーボードで入力，ドアをクリックで決定) →",10,580);
+          text_door.add_box(750,555,150,30); //テキストボックスの表示
+          //text(keyData,626,580); //key入力を画面に表示
+          print(key);
+          strData = field.getText();
+          //key = UP; //直前のキーをENTERから何かに変えておく
+          println("入力されたパスワードは"+strData);
+          strData = trim(strData); //文字列の先頭と末尾の空白文字を削除する
+          if(strData.equals(mystery5)){
+            println("gameclear!");
+            fill(0);
+            stroke(0);
+            rect(0,543,2000,100); 
+            //インベントリ表示 下の方が消えるバグ修正
+            inventory.display();
+            text_door.remove_box();
+            stage = ENDING;   // エンディングへ
+            loop(); //ループを再開して入力がなくても自動的にエンディング画面へ
+          }else{
+            println("パスワードが違います");
+            keyData = "";
+            field.setText(""); //テキストボックスを初期化
+          }
+       }
+     }
+   }
+  }else if (stage == ENDING){ 
   PImage door_up = loadImage("door_up.jpg");
   tint(gray); //tint(rgb,alpha) alphaが小さいほど透明 0-255
   image(door_up,0,0);
   gray = gray - 8;
   if(gray <= 0){
     ending(); 
+    }
   }
-  }
- }
+}
 
 void title(){
   background(0); 
@@ -131,6 +257,8 @@ void title(){
   text("Press any key to start", width * 0.5, height * 0.7);
   if (keyPressed) { // 何かのキーが押されていれば
     stage = GAME;   // ゲーム画面に遷移 
+    mouseX = 0; //タイトル画面でのクリックを無効化
+    mouseY = 0;
     redraw();
   }
 }
@@ -148,7 +276,6 @@ void ending(){
 
 
 void mousePressed() {
-  if(stage == GAME){
   click_count++;
   println("クリックされた回数は"+click_count+"回です");
   println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
@@ -160,78 +287,67 @@ void mousePressed() {
         return_main();
       }
     }
-    if (scene[4] == 1){//doorにいるとき
-      if(mouseX >= 389 && mouseX <=531){
-        if(mouseY >= 143 && mouseY <= 421){ //ドアの座標がクリックされたらdrawを回す
+    if(scene[1] == 1){ //ベッドにいるとき
+      if(mouseX >= 363 && mouseX <= 727){ //ベッドをクリック
+        if(mouseY >= 211 && mouseY <= 422){
           redraw();
+        }
+      }
+      if(mouseX >= 565 && mouseX <= 638){ //ゴミ箱をクリック
+        if(mouseY >= 446 && mouseY <= 536){
+          redraw();
+        }
       }
     }
-  }
-  } else{
+    if (scene[2] == 1){//chestにいるとき
+      if(mouseX >= 382 && mouseX <= 563){
+        if (mouseY >= 124 && mouseY <= 286){//鏡の座標がクリックされたらdrawを回す．
+          redraw();
+        }
+      }
+      if(mouseX >= 301 && mouseX <= 646){
+        if(mouseY >= 294 && mouseY <= 481){ //チェストの鏡以外部分，したの方
+          redraw();
+          }
+        }
+      }
+    if (scene[3] == 1){ //deskにいるとき
+      if(mouseX >= 499 && mouseX <= 676){ //右下の棚がクリックされたらdrawを回す．
+        if(mouseY >= 197 && mouseY <=472){
+          redraw();
+        }
+      }
+    }
+    if (scene[4] == 1){//doorにいるとき
+      if(mouseX >= 389 && mouseX <=531){
+        if(mouseY >= 143 && mouseY <= 421){ //ドアがクリックされたらdrawを回す
+          redraw();
+        }
+      }
+    }
+  }else{
         redraw(); //main == 1 mainにいるときには移動するためにdrawを回す．
-      }   if(scene[4] == 1){//doorにいるときドアをクリックしたら，パスワード入力を始める．
-
-  }
-}
+    }
 }
 
 
 void keyPressed(){ 
   key_count+=1;
   println("キー「"+key+"」が押されました.");
-  if(key != ENTER){
-    //コード化されたキーではないならばString keyDataに追加する
-    keyData = keyData + key; //String keyData に入力されたkeyを保存する
-    println(keyData);
-  }else if (key == BACKSPACE || key == DELETE){
-    keyData.substring(0,keyData.length()-1);//0番目から最後ー1番目の文字まで取得する．(Enter等を消す．)
-    println("文字が消されました削除した結果，"+keyData);
-  }
-  redraw();
+  keyData = keyData + key; //String keyData に入力されたkeyを保存する
+  println(keyData);
 }
 
-// void return_main(){
-//    scene[0] = 1; //mainに戻るのでmainを1に．
-//    scene[1] = 0; //bedを0に．
-//    scene[2] = 0; //chestを0に．
-//    scene[3] = 0; //deskを0に．
-//    scene[4] = 0; //doorを0に．
-//    println("mainに戻ります");
-//    redraw();
-// }
 
-class sceneControl{
-  int[] scene = new int[5];
-  void returnMain(){
-    scene[0] = 1;
-    for(int i = 1 ; i < 5; i++){ scene[i] = 0; }
-    println("mainに戻ります");
-    redraw()
-  }
-  boolean checkScene(String name){
-    boolean result = false;
-    switch(name){
-      case 'bed':
-        if(scene[1] = 1){
-          result = true;
-          break;
-        }
-        break;
-      case 'chest':
-        if(scene[2] = 1){
-          result = true;
-          break;
-        }
-      case 'desk':
-        if(scene[3] = 1){
-          result = true;
-          break;
-        }
-      case 'door':
-        if(scene[4] = 1)
-
-    }
-  }
+void return_main(){
+   scene[0] = 1; //mainに戻るのでmainを1に．
+   scene[1] = 0; //bedを0に．
+   scene[2] = 0; //chestを0に．
+   scene[3] = 0; //deskを0に．
+   scene[4] = 0; //doorを0に．
+   text_bed.remove_box();   //テキストbox
+   println("mainに戻ります");
+   redraw();
 }
 
 class bedView{
@@ -263,6 +379,7 @@ class bedView{
   }
 }
 
+
 class chestView{
   int firstX=0, endX=0, firstY=0, endY=0;
   PImage return_button = loadImage("return_Main.png");
@@ -287,6 +404,7 @@ class chestView{
     return result;
   }
 }
+
 
 class deskView{
   int firstX=0, endX=0, firstY=0, endY=0;
@@ -342,12 +460,12 @@ class doorView{
 class Inventory{      //インベントリ
     int firstX=0, endX=0, firstY=0, endY=0;
     Inventory(int a, int b, int c, int d){
-    firstX = a;
-    endX = b;
-    firstY = c;
-    endY = d;
+      firstX = a;
+      endX = b;
+      firstY = c;
+      endY = d;
     }
-     void display(){      //アイテム欄表示
+     void display(){    //アイテム欄表示
       stroke(128);  
       strokeWeight(4);
       fill(0,0,0);
@@ -367,4 +485,22 @@ class Inventory{      //インベントリ
      }
      void Item4(){
      }
+}
+
+class textbox{    //textboxクラス
+  int firstX=0, endX=0, text_width=0, text_height=0;
+  textbox(int a, int b, int c, int d){
+  firstX = a;
+  endX = b;
+  text_width = c;
+  text_height = d;
+  }
+  void add_box(int x, int y, int box_width, int box_height){
+      field.setBounds(x,y,box_width,box_height);
+      pane.add(field);
+  }
+  void remove_box(){
+    println(field.getText());
+    pane.remove(field);
+  }
 }
