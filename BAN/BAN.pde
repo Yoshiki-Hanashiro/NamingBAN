@@ -79,6 +79,7 @@ void draw(){
       bed.display();
       bed.sceneChange();
       have_item1 = true;
+      up_show_item();
       keyData="";
     }
     //タンス処理
@@ -93,7 +94,6 @@ void draw(){
       desk.display();
       desk.sceneChange();
       have_item3 = true;
-      have_item4 = true;  //テストのためフラグをここに置いてるだけ
       keyData ="";//今まで保存していたキー入力を初期化．
     }
     //ドア処理
@@ -237,10 +237,13 @@ void have_item(){
 }
 //  アイテム拡大表示メソッド
 void up_show_item(){
+  boolean item4_frag1 = false;
+  boolean item4_frag2 = false;
   if(have_item1){
     if(mouseX >= 965 && mouseX <= 1195){
       if(mouseY > 6 && mouseY <= 146){
         inventory.show_item1("mys_1.png");
+        item4_frag1 = true;
       }
     }
   }
@@ -248,6 +251,7 @@ void up_show_item(){
     if(mouseX >= 965 && mouseX <= 1195){
       if(mouseY > 158&& mouseY <= 298){
         inventory.show_item2("mys_2.png");
+        item4_frag2 = true;
       }
     }
   }
@@ -257,6 +261,9 @@ void up_show_item(){
         inventory.show_item3("mys_3.png");
       }
     }
+  }
+  if(item4_frag1 == true && item4_frag2 == true){
+    have_item4 = true;
   }
   if(have_item4){
     if(mouseX >= 965 && mouseX <= 1195){
@@ -447,6 +454,7 @@ class Inventory{      //インベントリ
      }
      
 }
+
 
 class Textbox{    //textboxクラス
   int firstX=0, endX=0, text_width=0, text_height=0;
