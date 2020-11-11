@@ -3,11 +3,11 @@ chestView chest;
 deskView desk;
 doorView door;
 Inventory inventory;
+Inventory inventory;
 textbox text_bed;
 textbox text_chest;
 textbox text_desk;
 textbox text_door;
-sceneControl sc;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,10 +22,11 @@ final int GAME = 1;
 final int ENDING = 2;
 int click_count = 0;
 int key_count = 0;
+int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
 //自分の見ている場所を表す配列です．
 //mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
 String keyData; //キー入力を保存する変数
-String strData; //テキストボックスに入力された文字を保存する変数．
+String strData;
 float gray = 255.0; //画像の暗さを保存しておく変数 0になると真っ暗になる．フェードアウトに使います
 
 //_________________________________________以下，mystery
@@ -48,8 +49,9 @@ void setup(){
   text_desk = new textbox(310, 310, 150, 30); //desk_upでtextboxを表示するため
   text_door = new textbox(310, 310, 150, 30); //door_upでtextboxを表示するため
   field = new JTextField();
+  scene = new int[5];
   keyData = new String();
-  sc = new sceneControl();
+  scene[0] = 1;
   size(1200, 600);
   background(255);
   PFont font = createFont("Meiryo", 50); //日本語が表示されるように．
@@ -65,12 +67,12 @@ void draw(){
   else if (stage == GAME){
     noLoop();
     fill(0);
-    stroke(0);  
-    rect(0,543,900,100); 
+    stroke(0);     
+    rect(0,543,2000,100); 
     //0,543は左下テキスト描画ウィンドウの左上の座標です．
-    //そこからx=900ピクセル，y=100ピクセルの真っ黒な長方形を出力することでテキストを消します．
+    //そこからx=2000ピクセル，y=100ピクセルの真っ黒な長方形を出力することでテキスト描画ウィンドウをリセットしています．
               
-    if(sc.check("main")){//mainにいるならば
+    if(scene[0] == 1){//mainにいるならば
     // PImage 型の変数 に画像データを読み込む
     PImage main = loadImage("main.jpg");
     // 背景を表示
@@ -81,31 +83,34 @@ void draw(){
     if(bed.check()){
       bed.display();
       bed.sceneChange();
-
-      keyData="";
+      keyData ="";//今まで保存していた入力を初期化．
     }
     //タンス処理
     else if(chest.check()){
       chest.display();
       chest.sceneChange();
-
       keyData ="";//今まで保存していたキー入力を初期化．
     }
     //机処理
     else if(desk.check()){
       desk.display();
       desk.sceneChange();
-
       keyData ="";//今まで保存していたキー入力を初期化．
     }
     //ドア処理
     else if(door.check()){
       door.display();
       door.sceneChange();
-
       keyData ="";//今まで保存していたキー入力を初期化．
     }
-  }else if (sc.check("bed")){ //mainにいなくてベッドにいる時，
+  }
+    //ドア処理
+    else if(door.check()){
+      door.display();
+      door.sceneChange();
+      keyData ="";//今まで保存していたキー入力を初期化．
+    }
+  }else if (scene[1] == 1){ //mainにいなくてベッドにいる時，
     if( mouseX >= 363 && mouseX <= 727){ //ベッドをクリック
       if(mouseY >= 211 && mouseY <= 422){
         //画像を表示
@@ -142,7 +147,7 @@ void draw(){
           }
         }
       }
-    }else if (sc.check("chest")){//mainにいなくてchestにいるとき
+    }else if (scene[2] == 1){//mainにいなくてchestにいるとき
       if(mouseX >= 382 && mouseX <= 563){
         if (mouseY >= 124 && mouseY <= 286){
           println("チェストの鏡をクリックしました");
@@ -177,7 +182,7 @@ void draw(){
           }
        }
      }
-    }else if (sc.check("desk")){ //deskにいるならば
+    }else if (scene[3] == 1){ //deskにいるならば
       if(mouseX >= 499 && mouseX <= 676){
         if(mouseY >= 197 && mouseY <=472){
           fill(255);
@@ -203,7 +208,7 @@ void draw(){
             }
           }
       }
-    }else if (sc.check("door")){//doorにいるならば
+    }else if (scene[4] == 1){//doorにいるならば
       if(mouseX >= 389 && mouseX <=531){
         if(mouseY >= 143 && mouseY <= 421){ //ドアの座標
           fill(255);
@@ -261,7 +266,6 @@ void title(){
   }
 }
 
-
 void ending(){
   delay(1000);
   background(0); 
@@ -272,20 +276,19 @@ void ending(){
   text("Thank you for playing!", width * 0.5, height * 0.5);
 }
 
-
 void mousePressed() {
   click_count++;
   println("クリックされた回数は"+click_count+"回です");
   println("X = " + mouseX + " ,Y = " + mouseY+"がクリックされました.");
-  //----println(scene);
+  println(scene);
   //mainにいないときには戻るボタン以外ではdraw()を回さないように場合分け．
-  if (!(sc.check("main"))){//mainにいないときに
+  if (scene[0] != 1){//mainにいないときに
     if(mouseX >=397 && mouseX <= 552){//戻るボタンが押されたら，main画像を表示する．
       if(mouseY >= 493 && mouseY <= 531){
-        sc.returnMain();
+        return_main();
       }
     }
-    if(sc.check("bed")){ //ベッドにいるとき
+    if(scene[1] == 1){ //ベッドにいるとき
       if(mouseX >= 363 && mouseX <= 727){ //ベッドをクリック
         if(mouseY >= 211 && mouseY <= 422){
           redraw();
@@ -297,7 +300,7 @@ void mousePressed() {
         }
       }
     }
-    if (sc.check("chest")){//chestにいるとき
+    if (scene[2] == 1){//chestにいるとき
       if(mouseX >= 382 && mouseX <= 563){
         if (mouseY >= 124 && mouseY <= 286){//鏡の座標がクリックされたらdrawを回す．
           redraw();
@@ -309,14 +312,14 @@ void mousePressed() {
           }
         }
       }
-    if (sc.check("desk")){ //deskにいるとき
+    if (scene[3] == 1){ //deskにいるとき
       if(mouseX >= 499 && mouseX <= 676){ //右下の棚がクリックされたらdrawを回す．
         if(mouseY >= 197 && mouseY <=472){
           redraw();
         }
       }
     }
-    if (sc.check("door")){//doorにいるとき
+    if (scene[4] == 1){//doorにいるとき
       if(mouseX >= 389 && mouseX <=531){
         if(mouseY >= 143 && mouseY <= 421){ //ドアがクリックされたらdrawを回す
           redraw();
@@ -335,118 +338,15 @@ void keyPressed(){
   println(keyData);
 }
 
-// void return_main(){
-//    scene[0] = 1; //mainに戻るのでmainを1に．
-//    scene[1] = 0; //bedを0に．
-//    scene[2] = 0; //chestを0に．
-//    scene[3] = 0; //deskを0に．
-//    scene[4] = 0; //doorを0に．
-//    text_bed.remove_box();   //テキストbox
-//    println("mainに戻ります");
-//    redraw();
-// }
-
-class sceneControl{
-  int[] scene = new int[5];
-  sceneControl(){
-    this.returnMain();
-  }
-  void returnMain(){
-    scene[0] = 1;
-    for(int i = 1 ; i < 5; i++){ scene[i] = 0; }
-    println("mainに戻ります");
-    redraw();
-  }
-  boolean check(String name){
-    boolean result = false;
-    if(name == "bed"){ if(scene[1] == 1){ result = true; } }
-    else if(name == "chest"){ if(scene[2] == 1){ result = true; } }
-    else if(name == "desk"){ if(scene[3] == 1){ result = true; } }
-    else if(name == "door"){ if(scene[4] == 1){ result = true; } }
-    else if(name == "main"){ if(scene[0] == 1){ result = true; } }
-    return result;
-  }
-}
-
-class bedView{
-  int firstX=0, endX=0, firstY=0, endY=0;
-  PImage return_button = loadImage("return_Main.png");
-  PImage bed = loadImage("bed_up.jpg");
-  bedView(int a, int b, int c, int d){
-    firstX = a;
-    endX = b;
-    firstY = c;
-    endY = d;
-  }
-  void display(){
-    image(bed, 0, 0);
-    image(return_button, 395, 490);
-  }
-  void sceneChange(){
-    sc.scene[0] = 0;
-    sc.scene[1] = 1;
-  }
-  boolean check(){
-    boolean result = false;
-    if (mouseX >= this.firstX && mouseX <= this.endX){
-      if(mouseY >= this.firstY && mouseY <= this.endY){
-        result = true;
-      }
-    }
-    return result;
-  }
-}
-
-
-class chestView{
-  int firstX=0, endX=0, firstY=0, endY=0;
-  PImage return_button = loadImage("return_Main.png");
-  PImage chest = loadImage("chest_up.jpg");
-  chestView(int a, int b, int c, int d){
-    firstX = a;
-    endX = b;
-    firstY = c;
-    endY = d;
-  }
-  void display(){
-    image(chest, 0, 0);
-    image(return_button, 395, 490);
-  }
-  void sceneChange(){
-    sc.scene[0] = 0;
-    sc.scene[2] = 1;
-  }
-  boolean check(){
-    boolean result = false;
-    if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
-    return result;
-  }
-}
-
-
-class deskView{
-  int firstX=0, endX=0, firstY=0, endY=0;
-  PImage return_button = loadImage("return_Main.png");
-  PImage desk = loadImage("desk_up.jpg");
-  deskView(int a, int b, int c, int d){
-    firstX = a;
-    endX = b;
-    firstY = c;
-    endY = d;
-  }
-  void display(){
-    image(desk, 0, 0);
-    image(return_button, 395, 490);
-  }
-  void sceneChange(){
-    sc.scene[0] = 0;
-    sc.scene[3] = 1;
-  }
-  boolean check(){
-    boolean result = false;
-    if (mouseX >= this.firstX && mouseX <= this.endX){ if(mouseY >= this.firstY && mouseY <= this.endY){ result = true; }}
-    return result;
-  }
+void return_main(){
+   scene[0] = 1; //mainに戻るのでmainを1に．
+   scene[1] = 0; //bedを0に．
+   scene[2] = 0; //chestを0に．
+   scene[3] = 0; //deskを0に．
+   scene[4] = 0; //doorを0に．
+   text_bed.remove_box();   //テキストbox
+   println("mainに戻ります");
+   redraw();
 }
 
 class doorView{
@@ -464,8 +364,8 @@ class doorView{
     image(return_button, 395, 490);
   }
   void sceneChange(){
-    sc.scene[0] = 0;
-    sc.scene[4] = 1;
+    scene[0] = 0;
+    scene[4] = 1;
 }
   boolean check(){
     boolean result = false;

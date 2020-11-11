@@ -22,6 +22,7 @@ final int GAME = 1;
 final int ENDING = 2;
 int click_count = 0;
 int key_count = 0;
+//----int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
 //自分の見ている場所を表す配列です．
 //mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
 String keyData; //キー入力を保存する変数
@@ -48,10 +49,13 @@ void setup(){
   text_desk = new textbox(310, 310, 150, 30); //desk_upでtextboxを表示するため
   text_door = new textbox(310, 310, 150, 30); //door_upでtextboxを表示するため
   field = new JTextField();
+  //----scene = new int[5];
   keyData = new String();
   sc = new sceneControl();
+  //----scene[0] = 1; //最初の視点をmainに．
   size(1200, 600);
   background(255);
+  //noLoop();
   PFont font = createFont("Meiryo", 50); //日本語が表示されるように．
   textFont(font);
   Canvas canvas = (Canvas) surface.getNative();
