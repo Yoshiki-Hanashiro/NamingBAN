@@ -18,10 +18,6 @@ final int GAME = 1;
 final int ENDING = 2;
 int click_count = 0;
 int key_count = 0;
-boolean have_item1 = false;
-boolean have_item2 = false;
-boolean have_item3 = false;
-boolean have_item4 = false;
 int[] scene; //[main, bed_up, chest_up, desk_up, door_up]
 //自分の見ている場所を表す配列です．
 //mainにいるならmain=1，bedを見ているならbedを表すscene[1]=1となります．
@@ -70,36 +66,34 @@ void draw(){
     image(main, 0, 0);
     //インベントリ表示
     inventory.display();
-    //item持ってたらアイテム欄に表示
-    have_item();
-    //item拡大表示メソッド
-    up_show_item();
+    inventory.check1();
+
     //ベッド処理
     if(bed.check()){
       bed.display();
       bed.sceneChange();
-      have_item1 = true;
+      text_bed.add_box(310, 310, 150, 30);    //テキストボックスを指定の座標、大きさで表示
       keyData="";
     }
     //タンス処理
     else if(chest.check()){
       chest.display();
       chest.sceneChange();
-      have_item2 = true;
+      
       keyData ="";//今まで保存していたキー入力を初期化．
     }
     //机処理
     else if(desk.check()){
       desk.display();
       desk.sceneChange();
-      have_item3 = true;
-      have_item4 = true;  //テストのためフラグをここに置いてるだけ
+
       keyData ="";//今まで保存していたキー入力を初期化．
     }
     //ドア処理
     else if(door.check()){
       door.display();
       door.sceneChange();
+
       keyData ="";//今まで保存していたキー入力を初期化．
     }
 
@@ -154,6 +148,7 @@ void title(){
   }
 }
 
+
 void ending(){
   delay(1000);
   background(0); 
@@ -165,7 +160,7 @@ void ending(){
 }
 
 
-void mousePressed(){
+void mousePressed() {
   if(stage == GAME){
   click_count++;
   println("クリックされた回数は"+click_count+"回です");
@@ -194,7 +189,7 @@ void mousePressed(){
 }
 
 
-void keyPressed(){
+void keyPressed(){ 
   key_count+=1;
   println("キー「"+key+"」が押されました.");
   if(key != ENTER){
@@ -218,53 +213,6 @@ void return_main(){
    text_bed.remove_box();   //テキストboxをremove
    println("mainに戻ります");
    redraw();
-}
-
-//item持ったらインベントリに表示
-void have_item(){
-    if(have_item1){
-      inventory.item1("mys_1.png");
-    }
-    if(have_item2){
-      inventory.item2("mys_2.png");
-    }
-    if(have_item3){
-      inventory.item3("mys_3.png");
-    }
-    if(have_item4){
-      inventory.item4("mys_4.png");
-    }
-}
-//  アイテム拡大表示メソッド
-void up_show_item(){
-  if(have_item1){
-    if(mouseX >= 965 && mouseX <= 1195){
-      if(mouseY > 6 && mouseY <= 146){
-        inventory.show_item1("mys_1.png");
-      }
-    }
-  }
-  if(have_item2){
-    if(mouseX >= 965 && mouseX <= 1195){
-      if(mouseY > 158&& mouseY <= 298){
-        inventory.show_item2("mys_2.png");
-      }
-    }
-  }
-  if(have_item3){
-    if(mouseX >= 965 && mouseX <= 1195){
-      if(mouseY > 307&& mouseY <= 447){
-        inventory.show_item3("mys_3.png");
-      }
-    }
-  }
-  if(have_item4){
-    if(mouseX >= 965 && mouseX <= 1195){
-      if(mouseY > 457&& mouseY <= 597){
-        inventory.show_item4("mys_4.png");
-      }
-    }
-  }
 }
 
 class bedView{
@@ -390,62 +338,22 @@ class Inventory{      //インベントリ
       rect(960,height * 0.5,width - 960,height * 0.25);
       rect(960,height * 0.75,width - 960,height * 0.25);
      }
-     //アイテム表示メソッド
+     //アイテム表示メソッド:アイテム画像用意され次第取り掛かります
      void item1(String image_file_name){
        PImage item_1 = loadImage(image_file_name);
-       item_1.resize(150,90);
+       item_1.resize(int(item_1.width * 0.10), int(item_1.height * 0.10));
        image(item_1, 1000, height * 0.25 * 0.25);
      }
-     void item2(String image_file_name){
-       PImage item_2 = loadImage(image_file_name);
-       item_2.resize(150,90);
-       image(item_2, 1000, 180);
+     void check1(){
+       boolean have_item1 = true;
+       item1("mys_1.png");
      }
-     void item3(String image_file_name){
-       PImage item_3 = loadImage(image_file_name);
-       item_3.resize(150,90);
-       image(item_3, 1000, 335);
+     void item2(){
      }
-     void item4(String image_file_name){
-       PImage item_4 = loadImage(image_file_name);
-       item_4.resize(150,90);
-       image(item_4, 1000, 480);
+     void item3(){
      }
-     // itemを拡大表示するメソッド
-     
-     void show_item1(String image_file_name){
-        println("item" + image_file_name + "が押されました");
-        fill(46,45,45,200);
-        rect(0,0,1200,600);
-        PImage item_1_big = loadImage(image_file_name);
-        item_1_big.resize(850,500);
-        image(item_1_big, 50,20);
+     void item4(){
      }
-     void show_item2(String image_file_name){
-        println("item" + image_file_name + "が押されました");
-        fill(46,45,45,200);
-        rect(0,0,1200,600);
-        PImage item_2_big = loadImage(image_file_name);
-        item_2_big.resize(850,500);
-        image(item_2_big, 50,20);
-     }
-     void show_item3(String image_file_name){
-        println("item" + image_file_name + "が押されました");
-        fill(46,45,45,200);
-        rect(0,0,1200,600);
-        PImage item_3_big = loadImage(image_file_name);
-        item_3_big.resize(850,500);
-        image(item_3_big, 50,20);
-     }
-     void show_item4(String image_file_name){
-        println("item" + image_file_name + "が押されました");
-        fill(46,45,45,200);
-        rect(0,0,1200,600);
-        PImage item_4_big = loadImage(image_file_name);
-        item_4_big.resize(850,500);
-        image(item_4_big, 50,20);
-     }
-     
 }
 
 class Textbox{    //textboxクラス
