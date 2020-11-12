@@ -590,9 +590,8 @@ void up_show_item(){
       if(mouseY > 6 && mouseY <= 146){
         inventory.show_item1("mys_1.png");
         item1_Display = true; //item1を拡大中．
-        println("item1を拡大します");
         if(have_item3 && item2_Display){ // item3まで取得し，item2を拡大している時にitem1を拡大する事がitem4の入手条件
-            to.serifDisplay("アイテム1とアイテム2..うまく重なりそう..! (表4を手に入れた)");
+            to.serifDisplay("アイテム1とアイテム2..うまく重なりそう..! (表4を手に入れた!)");
             have_item4 = true;
           }
         }
@@ -603,9 +602,8 @@ void up_show_item(){
       if(mouseY > 158&& mouseY <= 298){
         inventory.show_item2("mys_2.png");
         item2_Display = true; //item2を拡大しています．
-        println("item2を拡大します");
         if(have_item3 && item1_Display){ // item1を拡大している時にitem2を拡大する事もitem4の入手条件
-            to.serifDisplay("アイテム1とアイテム2..うまく重なりそう..! (表4を手に入れた)");
+            to.serifDisplay("アイテム1とアイテム2..うまく重なりそう..! (表4を手に入れた!)");
             have_item4 = true;
           }
         }
