@@ -591,7 +591,7 @@ void up_show_item(){
         inventory.show_item1("mys_1.png");
         item1_Display = true; //item1を拡大中．
         if(have_item3 && item2_Display){ // item3まで取得し，item2を拡大している時にitem1を拡大する事がitem4の入手条件
-            to.serifDisplay("アイテム1とアイテム2..うまく重なりそう..! (表4を手に入れた!)");
+            to.serifDisplay("アイテム1とアイテム2..うまく重なりそうだ..! (表4を手に入れた!)");
             have_item4 = true;
           }
         }
@@ -603,7 +603,7 @@ void up_show_item(){
         inventory.show_item2("mys_2.png");
         item2_Display = true; //item2を拡大しています．
         if(have_item3 && item1_Display){ // item1を拡大している時にitem2を拡大する事もitem4の入手条件
-            to.serifDisplay("アイテム1とアイテム2..うまく重なりそう..! (表4を手に入れた!)");
+            to.serifDisplay("アイテム1とアイテム2..うまく重なりそうだ..! (表4を手に入れた!)");
             have_item4 = true;
           }
         }
@@ -675,8 +675,7 @@ class Inventory{  //インベントリ
     fill(46,45,45,200);
     rect(0,0,960,540);
     PImage item_1_big = loadImage(image_file_name);
-    item_1_big.resize(850,500);
-    image(item_1_big, 50,20);
+    image(item_1_big, 500,10);
   }
   void show_item2(String image_file_name){
     fill(46,45,45,200);
@@ -696,7 +695,6 @@ class Inventory{  //インベントリ
     fill(46,45,45,200);
     rect(0,0,960,537);
     PImage item_4_big = loadImage(image_file_name);
-    item_4_big.resize(850,500);
-    image(item_4_big, 50,20);
+    image(item_4_big, 400,10);
   }    
 }
