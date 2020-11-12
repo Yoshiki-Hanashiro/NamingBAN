@@ -7,7 +7,7 @@
         "type": "process",
         "args": [
           "--force",
-          "--sketch=${workspaceRoot}",
+          "--sketch=${fileDirname}",
           "--run"
         ],
         "group": {
@@ -17,7 +17,8 @@
         "presentation": {
           "reveal": "always",
           "panel": "new"
-        }
+        },
+        "problemMatcher": []
       }
     ]
 }
